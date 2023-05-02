@@ -1,5 +1,5 @@
 global artistName, songName, albumName, songRating, songDuration, currentPosition, musicapp, apiKey, songMetaFile, mypath, currentCoverURL, isLoved
-set metaToGrab to {"artistName", "songName", "albumName", "songDuration", "currentPosition", "coverURL", "songChanged", "isLoved", "darkMode"}
+set metaToGrab to {"artistName", "songName", "albumName", "songDuration", "currentPosition", "coverURL", "songChanged", "isLoved"}
 property enableLogging : false --- options: true | false
 
 set apiKey to "2e8c49b69df3c1cf31aaa36b3ba1d166"
@@ -17,10 +17,9 @@ set songMetaFile to (mypath & "songMeta.plist" as string)
 
 
 if isMusicPlaying() is true then
-	pruneCovers()
+	my pruneCovers()
 	getSongMeta()
 	writeSongMeta({"currentPosition" & "##" & currentPosition})
-	writeSongMeta({"darkMode" & "##" & checkDarkMode()})
 	
 	if didSongChange() is true then
 		delay 1
@@ -53,13 +52,13 @@ spitOutput(metaToGrab) as string
 ------------------------------------------------
 
 on isMusicPlaying()
-	set apps to {"iTunes", "Spotify"}
+	set apps to {"Music", "Spotify"}
 	set answer to false
 	repeat with anApp in apps
 		tell application "System Events" to set isRunning to (name of processes) contains anApp
 		if isRunning is true then
 			try
-				using terms from application "iTunes"
+				using terms from application "Music"
 					tell application anApp
 						if player state is playing then
 							set musicapp to (anApp as string)
@@ -78,11 +77,11 @@ end isMusicPlaying
 on getSongMeta()
 	try
 		set musicAppReference to a reference to application musicapp
-		using terms from application "iTunes"
+		using terms from application "Music"
 			try
 				tell musicAppReference
 					set {artistName, songName, albumName, songDuration} to {artist, name, album, duration} of current track
-					if musicapp is "iTunes" then
+					if musicapp is "Music" then
 						set isLoved to loved of current track as string
 					else if musicapp is "Spotify" then
 						try
@@ -132,8 +131,8 @@ end didCoverChange
 
 on grabCover()
 	try
-		if musicapp is "iTunes" then
-			tell application "iTunes" to tell current track
+		if musicapp is "Music" then
+			tell application "Music" to tell current track
 				if exists (every artwork) then
 					my getLocaliTunesArt()
 				else
@@ -151,7 +150,7 @@ on grabCover()
 end grabCover
 
 on getLocaliTunesArt()
-	tell application "iTunes" to tell artwork 1 of current track -- get the raw bytes of the artwork into a var
+	tell application "Music" to tell artwork 1 of current track -- get the raw bytes of the artwork into a var
 		set srcBytes to raw data
 		if format is Çclass PNG È then -- figure out the proper file extension
 			set ext to ".png"
@@ -213,14 +212,6 @@ on pruneCovers()
 		my logEvent(e)
 	end try
 end pruneCovers
-
-on checkDarkMode()
-	try
-		tell application "System Events" to tell appearance preferences to return dark mode
-	on error
-		return false
-	end try
-end checkDarkMode
 
 on getPathItem(aPath)
 	set AppleScript's text item delimiters to "/"

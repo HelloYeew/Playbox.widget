@@ -5,13 +5,13 @@
 options =
   # Choose where the widget should sit on your screen.
   verticalPosition    : "bottom"        # top | center | bottom
-  horizontalPosition    : "left"        # left | center | right
+  horizontalPosition    : "right"        # left | center | right
 
   # Choose widget size.
-  widgetSize: "medium"                  # big | medium | smol
+  widgetSize: "smol"                  # big | medium | smol
 
   # Choose color theme.
-  widgetTheme: "dark"                   # auto | dark | light
+  widgetTheme: "light"                   # dark | light
 
   # Stick the widget in the corner? It removes round corners and shadows for a flat, minimalist setup.
   stickInCorner: false                  # true | false
@@ -116,6 +116,7 @@ style: """
     align-items center
     overflow hidden
     z-index 1
+    width 325px
 
   .art
     width 48pt
