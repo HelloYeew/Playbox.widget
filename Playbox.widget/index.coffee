@@ -55,7 +55,7 @@ style: """
   // Stick in corner styling.
 
   if #{options.stickInCorner} == false
-    margin = 16pt
+    margin = 8pt
     borderRadius = 8pt * scale
     box-shadow 0 24pt 32pt 0 rgba(0,0,0,.4)
     border-radius borderRadius
